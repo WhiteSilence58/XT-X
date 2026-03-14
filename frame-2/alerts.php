@@ -4,11 +4,15 @@ require_once 'includes/config.php';
 require_once 'includes/db.php';
 require_once 'includes/auth.php';
 require_once 'includes/functions.php';
+require_once 'includes/notifications.php';
 
 // Login erforderlich
 Auth::requireLogin();
 
 $user_id = Auth::getCurrentUserId();
+
+// Benachrichtigungen aus neuen Listings / Preisänderungen generieren
+NotificationHelper::generateForAllWatchers($user_id);
 
 // Pagination
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;

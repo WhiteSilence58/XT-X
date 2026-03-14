@@ -2,6 +2,7 @@
 require_once '../includes/config.php';
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
+require_once '../includes/notifications.php';
 
 header('Content-Type: application/json');
 Auth::requireLogin();
@@ -36,6 +37,9 @@ Database::execute(
     "UPDATE watchers SET next_run_at = NOW() WHERE id = $1",
     [$watcher_id]
 );
+
+// Benachrichtigungen für bereits vorhandene Daten dieses Watchers generieren
+NotificationHelper::generateForWatcher((int)$watcher_id, $user_id);
 
 echo json_encode([
     'success' => true,
